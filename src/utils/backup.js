@@ -4,7 +4,9 @@ export function exportToJson(expenses) {
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
   link.href = url;
-  link.download = `かんたん経費ノート_大切なデータ_${new Date().toISOString().slice(0, 10)}.json`;
+  const today = new Date();
+  const dateStr = `${today.getFullYear()}${String(today.getMonth() + 1).padStart(2, '0')}${String(today.getDate()).padStart(2, '0')}`;
+  link.download = `kantan_keihi_backup_${dateStr}.json`;
   link.click();
   URL.revokeObjectURL(url);
 }
