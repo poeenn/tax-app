@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "Running Pre-push Tests..."
+
+# 1. ロジックテスト（Vitest）
+echo "[1/2] Running Unit Tests..."
+npm test || { echo "Unit tests failed. Push aborted."; exit 1; }
+
+# 2. E2Eテスト（Playwright）
+echo "[2/2] Running E2E Tests..."
+npm run test:e2e || { echo "E2E tests failed. Push aborted."; exit 1; }
+
+echo "All tests passed! Proceeding with push."

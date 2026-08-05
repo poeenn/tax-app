@@ -1,0 +1,8 @@
+[
+  {
+    "id": "taxpop-dev",
+    "name": "TaxPop! Dev Server",
+    "url": "http://localhost:5173",
+    "icon": "browser"
+  }
+]
