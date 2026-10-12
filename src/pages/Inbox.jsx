@@ -18,7 +18,7 @@ function readImageAsDataUrl(file) {
 function InboxPage() {
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
-  const { inboxExpenses, addExpense } = useExpenses();
+  const { inboxExpenses, addExpense, deleteExpense } = useExpenses();
   const [isUploading, setIsUploading] = useState(false);
 
   const handleFileSelect = async (event) => {
@@ -127,6 +127,7 @@ function InboxPage() {
                 分類する
               </button>
             }
+            onDelete={() => deleteExpense(expense.id)}
           />
         ))}
 

@@ -1,11 +1,17 @@
 import React from 'react';
-import { Clock } from 'lucide-react';
+import { Clock, Trash2 } from 'lucide-react';
 import { getCategoryById } from '../data/categories';
 import { formatDate, formatYen, getDeductibleAmount } from '../utils/expense';
 
-function ExpenseListItem({ expense, action }) {
+function ExpenseListItem({ expense, action, onDelete }) {
   const category = getCategoryById(expense.categoryId);
   const deductible = getDeductibleAmount(expense);
+
+  const handleDelete = () => {
+    if (window.confirm('本当にこのデータを削除しますか？')) {
+      onDelete?.();
+    }
+  };
 
   return (
     <div className="card expense-item">
@@ -36,7 +42,14 @@ function ExpenseListItem({ expense, action }) {
             計上 {formatYen(deductible)}
           </div>
         )}
-        {action}
+        <div style={{ display: 'flex', gap: '8px', justifyContent: 'flex-end', marginTop: '8px', alignItems: 'center' }}>
+          {onDelete && (
+             <button onClick={handleDelete} className="btn outline btn-sm" style={{ padding: '0 8px', color: '#ef4444', borderColor: '#fee2e2' }} title="削除">
+               <Trash2 size={16} />
+             </button>
+          )}
+          {action}
+        </div>
       </div>
     </div>
   );

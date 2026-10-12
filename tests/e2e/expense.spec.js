@@ -81,4 +81,68 @@ test.describe('かんたん経費ノート E2E Tests', () => {
     const csvBtn = page.locator('button:has-text("会計ソフト用に出力 (CSV)")');
     await expect(csvBtn).toBeVisible();
   });
+
+  test('データ管理とエクスポート機能のテスト', async ({ page }) => {
+    // 事前準備: 分類済みデータを1件作るため、モックから復元して分類する
+    await page.click('nav a:has-text("未分類")');
+    await page.locator('.expense-list .card').filter({ hasText: 'Amazon' }).locator('text=分類する').click();
+    await page.click('button:has-text("配信機材")');
+    await page.click('button:has-text("100%")');
+    await page.click('button:has-text("保存して次へ")');
+    await page.click('nav a:has-text("サマリー")');
+    
+    // 1. CSV出力のテスト
+    const [csvDownload] = await Promise.all([
+      page.waitForEvent('download'),
+      page.click('button:has-text("会計ソフト用に出力 (CSV)")')
+    ]);
+    expect(csvDownload.suggestedFilename()).toContain('かんたん経費_出力_');
+
+    // 2. JSON出力のテスト
+    const [jsonDownload] = await Promise.all([
+      page.waitForEvent('download'),
+      page.click('button:has-text("データをまるごと保存する")')
+    ]);
+    expect(jsonDownload.suggestedFilename()).toContain('かんたん経費_バックアップ_');
+
+    // 3. データ個別削除のテスト
+    // Amazonのデータの削除ボタン（Trash2アイコンがあるボタン）をクリック
+    page.once('dialog', dialog => dialog.accept());
+    await page.locator('.expense-list .card').filter({ hasText: 'Amazon' }).locator('button[title="削除"]').click();
+    
+    // 削除後、Amazonの表示が消えること
+    await expect(page.locator('text=Amazon').first()).not.toBeVisible();
+
+    // 4. データ完全消去のテスト
+    page.once('dialog', dialog => dialog.accept());
+    await page.click('button:has-text("最初からやり直す (データ全消去 ⚠️)")');
+    
+    // 消去後、サマリーの経費計上合計が ¥0 になるか
+    await expect(page.locator('text=¥0').first()).toBeVisible();
+
+    // 5. バックアップからの復元テスト
+    const testData = [{
+      id: 'test-restore-123',
+      name: 'リストアテスト経費',
+      amount: 9999,
+      date: '2026-08-06',
+      status: 'categorized',
+      categoryId: 'equipment',
+      businessRatio: 100,
+      createdAt: '2026-08-06T10:00:00.000Z'
+    }];
+    const buffer = Buffer.from(JSON.stringify(testData));
+
+    page.once('dialog', dialog => dialog.accept());
+    // input type="file" にバッファをセットして復元イベントを発火
+    await page.locator('input[type="file"][accept="application/json"]').setInputFiles({
+      name: 'kantan_keihi_backup_test.json',
+      mimeType: 'application/json',
+      buffer
+    });
+
+    // 復元後、テスト経費の金額 ¥9,999 が表示されているか
+    await expect(page.locator('text=¥9,999').first()).toBeVisible();
+    await expect(page.locator('text=リストアテスト経費').first()).toBeVisible();
+  });
 });

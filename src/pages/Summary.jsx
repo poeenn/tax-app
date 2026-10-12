@@ -11,7 +11,7 @@ import LegalDisclaimer from '../components/LegalDisclaimer';
 const MONTH_LABELS = ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'];
 
 function SummaryPage() {
-  const { summary, categorizedExpenses, expenses, restoreDemoData, restoreExpenses } = useExpenses();
+  const { summary, categorizedExpenses, expenses, clearAllData, restoreDemoData, restoreExpenses, deleteExpense } = useExpenses();
   const maxMonthTotal = Math.max(...summary.byMonth.map((item) => item.total), 1);
   const fileInputRef = React.useRef(null);
 
@@ -95,7 +95,11 @@ function SummaryPage() {
         <h3 className="font-bold mb-3">分類済み一覧</h3>
         <div className="expense-list">
           {categorizedExpenses.map((expense) => (
-            <ExpenseListItem key={expense.id} expense={expense} />
+            <ExpenseListItem
+              key={expense.id}
+              expense={expense}
+              onDelete={() => deleteExpense(expense.id)}
+            />
           ))}
           {categorizedExpenses.length === 0 && (
             <p className="text-muted text-center">まだ分類済みの経費がありません</p>
@@ -123,7 +127,28 @@ function SummaryPage() {
             hidden
           />
 
-          <button className="btn outline w-full mt-2" onClick={restoreDemoData} style={{ color: '#ef4444', borderColor: '#ef4444' }}>
+          <button
+            className="btn outline w-full mt-2"
+            onClick={() => {
+              if (window.confirm('現在のデータはすべて消え、お試し用のデモデータが入ります。よろしいですか？')) {
+                restoreDemoData();
+              }
+            }}
+            style={{ color: '#0369a1', borderColor: '#0369a1' }}
+          >
+            <RotateCcw size={16} />
+            お試し用デモデータを復元する 🎁
+          </button>
+
+          <button
+            className="btn outline w-full mt-2"
+            onClick={() => {
+              if (window.confirm('本当にすべてのデータを消去しますか？（復元できません）')) {
+                clearAllData();
+              }
+            }}
+            style={{ color: '#ef4444', borderColor: '#ef4444' }}
+          >
             <RotateCcw size={16} />
             最初からやり直す (データ全消去 ⚠️)
           </button>

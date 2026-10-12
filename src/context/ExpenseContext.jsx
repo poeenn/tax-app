@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
 import { createExpenseId, summarizeExpenses } from '../utils/expense';
-import { loadExpenses, saveExpenses, resetExpenses } from '../utils/storage';
+import { loadExpenses, saveExpenses, clearAllExpenses, restoreDemoExpenses } from '../utils/storage';
 
 const ExpenseContext = createContext(null);
 
@@ -70,8 +70,12 @@ export function ExpenseProvider({ children }) {
     setExpenses((prev) => prev.filter((expense) => expense.id !== id));
   };
 
+  const clearAllData = () => {
+    setExpenses(clearAllExpenses());
+  };
+
   const restoreDemoData = () => {
-    setExpenses(resetExpenses());
+    setExpenses(restoreDemoExpenses());
   };
 
   const restoreExpenses = (newExpenses) => {
@@ -87,6 +91,7 @@ export function ExpenseProvider({ children }) {
     categorizeExpense,
     excludeExpense,
     deleteExpense,
+    clearAllData,
     restoreDemoData,
     restoreExpenses,
   };

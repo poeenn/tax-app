@@ -73,7 +73,12 @@ export function saveExpenses(expenses) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
 }
 
-export function resetExpenses() {
-  localStorage.removeItem(STORAGE_KEY);
+export function clearAllExpenses() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+  return [];
+}
+
+export function restoreDemoExpenses() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(SEED_EXPENSES));
   return SEED_EXPENSES;
 }

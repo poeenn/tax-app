@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useExpenses } from '../context/ExpenseContext';
 import { formatYen } from '../utils/expense';
 import LegalDisclaimer from '../components/LegalDisclaimer';
+import StreamerToolsPromo from '../components/StreamerToolsPromo';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -16,7 +17,16 @@ function HomePage() {
         <h1 className="font-black text-primary" style={{ fontSize: '1.8rem' }}>
           おかえりなさい！配信お疲れ様です✨
         </h1>
-        <p className="text-muted">今日はどの経費を登録しますか？</p>
+        <p className="text-muted mb-4">今日はどの経費を登録しますか？</p>
+
+        <button
+          className="btn btn-secondary w-full"
+          onClick={() => navigate('/guide')}
+          style={{ backgroundColor: '#f0f9ff', color: '#0369a1', borderColor: '#bae6fd' }}
+        >
+          <span style={{ marginRight: '8px' }}>🔰</span>
+          はじめての方へ（使い方ガイド）
+        </button>
       </div>
 
       <div className="card mb-4 text-center">
@@ -76,6 +86,8 @@ function HomePage() {
           </div>
         </button>
       )}
+
+      <StreamerToolsPromo />
 
       <LegalDisclaimer />
     </div>

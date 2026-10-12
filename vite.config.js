@@ -7,7 +7,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icons/pwa-192x192.png', 'icons/pwa-512x512.png'],
+      includeAssets: ['favicon.svg', 'icons.svg', 'icons/pwa-192x192.png', 'icons/pwa-512x512.png'],
       manifest: {
         name: 'かんたん経費ノート',
         short_name: 'かんたん経費',

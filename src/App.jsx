@@ -1,12 +1,13 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import { Home, Inbox, Calculator, BarChart3 } from 'lucide-react';
+import { Home, Inbox, Calculator, BarChart3, BookOpen } from 'lucide-react';
 import { ExpenseProvider } from './context/ExpenseContext';
 import HomePage from './pages/Home';
 import InboxPage from './pages/Inbox';
 import CategorizePage from './pages/Categorize';
 import AddExpensePage from './pages/AddExpense';
 import SummaryPage from './pages/Summary';
+import GuidePage from './pages/Guide';
 import InstallGuide from './components/InstallGuide';
 
 function Navigation() {
@@ -33,6 +34,10 @@ function Navigation() {
         <BarChart3 size={24} />
         <span>サマリー</span>
       </NavLink>
+      <NavLink to="/guide" className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}>
+        <BookOpen size={24} />
+        <span>使い方</span>
+      </NavLink>
     </nav>
   );
 }
@@ -51,6 +56,7 @@ function App() {
               <Route path="/categorize" element={<CategorizePage />} />
               <Route path="/categorize/:expenseId" element={<CategorizePage />} />
               <Route path="/summary" element={<SummaryPage />} />
+              <Route path="/guide" element={<GuidePage />} />
             </Routes>
           </main>
           <InstallGuide />
